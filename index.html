@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>領導素質自我評估表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday — a calm worksheet filled in during class
+   IDEA the printed assessment sheet: you circle a number with a pen
+   PICTURE the form itself; then a large 18–90 scale with your marker landing in a zone
+   COLOUR paper white, ink near-black, pen blue #1d4ed8 for circles, zone tints
+   TYPE Noto Sans TC 900 titles + 400 text
+   LAYOUT one column ≤760px; sticky progress bar; result card below the form */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#0f1115);--ink:light-dark(#16181d,#eceef2);--mute:light-dark(#5b606b,#a3a9b5);--line:light-dark(#e3e5ea,#2a2e37);--soft:light-dark(#f4f6fa,#171a21);--pen:light-dark(#1d4ed8,#7aa2ff);--penbg:light-dark(#e8eeff,#1c2747);--z1:light-dark(#f6c9b8,#6b3526);--z2:light-dark(#f7e3a1,#6a5a20);--z3:light-dark(#bfe3c6,#2b5a37)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;overflow-x:clip}
+.wrap{max-width:760px;margin:0 auto;padding:0 max(16px,4vw)}
+header{padding:40px 0 20px}
+h1{font-size:clamp(30px,6vw,44px);line-height:1.1;font-weight:900;letter-spacing:-.01em;margin:0 0 12px;text-wrap:balance}
+.intro{color:var(--mute);margin:0 0 20px}
+.name{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.name label{font-weight:500}
+.name input{font:inherit;font-size:16px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);width:min(260px,100%)}
+.name input:focus{outline:3px solid var(--penbg);border-color:var(--pen)}
+.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:10px 0}
+.bar .wrap{display:flex;align-items:center;gap:14px}
+.track{flex:1;height:8px;border-radius:8px;background:var(--soft);overflow:hidden}
+.fill{height:100%;width:0;background:var(--pen);border-radius:8px;transition:width .3s}
+.count{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.legend{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:22px 0 4px;padding-left:calc(40% + 12px);font-size:13px;color:var(--mute);text-align:center;line-height:1.3}
+ol{list-style:none;margin:0;padding:0}
+.q{display:grid;grid-template-columns:40% minmax(0,1fr);gap:12px;align-items:center;padding:16px 0;border-top:1px solid var(--line);scroll-margin-top:70px}
+.q:last-child{border-bottom:1px solid var(--line)}
+.q p{margin:0;display:flex;gap:8px}
+.q p b{color:var(--mute);font-weight:500;font-variant-numeric:tabular-nums;flex:none;width:1.6em}
+.q.miss{background:light-dark(#fff4f1,#2a1814);border-radius:10px}
+.opts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;justify-items:center}
+.opt{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:700 17px/1 inherit;font-family:inherit;cursor:pointer;position:relative;transition:transform .12s}
+.opt:hover{border-color:var(--pen)}
+.opt:focus-visible{outline:3px solid var(--penbg);outline-offset:2px}
+.opt[aria-pressed=true]{border-color:var(--pen);color:var(--pen);background:var(--penbg)}
+.opt[aria-pressed=true]::after{content:"";position:absolute;inset:-5px;border:2.5px solid var(--pen);border-radius:52% 46% 50% 48%;transform:rotate(-8deg)}
+.opt:active{transform:scale(.94)}
+.mlabel{display:none}
+.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:28px 0 12px}
+button.main{font:700 17px/1 inherit;font-family:inherit;padding:15px 28px;border-radius:12px;border:0;background:var(--pen);color:light-dark(#fff,#0f1115);cursor:pointer;min-height:48px}
+button.ghost{font:500 16px/1 inherit;font-family:inherit;padding:13px 18px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;min-height:46px}
+button.main:focus-visible,button.ghost:focus-visible{outline:3px solid var(--penbg);outline-offset:2px}
+.hint{color:var(--mute);font-size:14px;margin:0}
+.src{color:var(--mute);font-size:13px;margin:6px 0 48px}
+#result{display:none;margin:8px 0 40px;border:1.5px solid var(--line);border-radius:18px;overflow:hidden}
+#result.on{display:block}
+.rtop{padding:24px clamp(18px,4vw,32px) 8px}
+.who{color:var(--mute);margin:0 0 4px;font-size:15px}
+.big{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.big strong{font-size:clamp(64px,16vw,96px);line-height:1;font-weight:900;color:var(--pen);font-variant-numeric:tabular-nums}
+.big span{font-size:18px;color:var(--mute)}
+.scale{padding:18px clamp(18px,4vw,32px) 6px}
+.zones{position:relative;display:grid;grid-template-columns:17fr 18fr 37fr;height:18px;border-radius:9px;overflow:visible}
+.zones i{display:block;height:100%}
+.zones i:nth-child(1){background:var(--z1);border-radius:9px 0 0 9px}
+.zones i:nth-child(2){background:var(--z2)}
+.zones i:nth-child(3){background:var(--z3);border-radius:0 9px 9px 0}
+.mark{position:absolute;top:-8px;width:4px;height:34px;background:var(--ink);border-radius:2px;transform:translateX(-50%);transition:left .6s cubic-bezier(.2,.8,.2,1)}
+.ticks{display:grid;grid-template-columns:17fr 18fr 37fr;font-size:13px;color:var(--mute);margin-top:8px}
+.ticks span{padding-left:2px;white-space:nowrap}
+.lvl{margin:16px clamp(18px,4vw,32px) 0;padding:16px 18px;border-radius:12px;background:var(--soft)}
+.lvl h2{font-size:20px;margin:0 0 6px;line-height:1.3}
+.lvl p{margin:0}
+.grow{padding:22px clamp(18px,4vw,32px) 26px}
+.grow h3{font-size:18px;margin:0 0 4px}
+.grow .hint{margin-bottom:12px}
+.grow ul{list-style:none;margin:0;padding:0}
+.grow li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:10px 0;border-top:1px solid var(--line);align-items:center}
+.pips{display:flex;gap:4px}
+.pips i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.pips i.f{background:var(--pen)}
+.ract{display:flex;flex-wrap:wrap;gap:10px;padding:0 clamp(18px,4vw,32px) 24px}
+#copied{color:var(--pen);font-size:14px;align-self:center}
+@media(max-width:600px){
+.legend{display:none}
+.q{grid-template-columns:minmax(0,1fr);gap:10px}
+.opts{gap:2px}
+.mlabel{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));font-size:13px;color:var(--mute);text-align:center;line-height:1.25;margin-top:-2px}
+.ticks span{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){.mark,.fill,.opt{transition:none}}
+</style>
+</head>
+<body>
+<header class="wrap">
+<h1>領導素質自我評估表</h1>
+<p class="intro">對每項敘述，依照你的認同程度點選 1 到 5。1 是非常不同意，5 是非常同意。沒有標準答案，照實際情況選就好。</p>
+<div class="name"><label for="who">你的名字</label><input id="who" type="text" placeholder="選填，會顯示在結果上" autocomplete="name"></div>
+</header>
+
+<div class="bar"><div class="wrap"><div class="track"><div class="fill" id="fill"></div></div><span class="count" id="count">0 / 18</span></div></div>
+
+<main class="wrap">
+<div class="legend" aria-hidden="true"><span>非常<br>不同意</span><span>不同意</span><span>既不同意<br>也不反對</span><span>同意</span><span>非常<br>同意</span></div>
+<ol id="list"></ol>
+
+<div class="actions">
+<button class="main" id="go" type="button">看我的分數</button>
+<button class="ghost" id="reset" type="button">全部重填</button>
+</div>
+<p class="hint" id="msg">18 題都作答後就能看到結果。</p>
+
+<section id="result" aria-live="polite">
+<div class="rtop">
+<p class="who" id="rwho"></p>
+<div class="big"><strong id="score">0</strong><span>/ 90 分</span></div>
+</div>
+<div class="scale">
+<div class="zones"><i></i><i></i><i></i><div class="mark" id="mark"></div></div>
+<div class="ticks"><span>18–34</span><span>35–52</span><span>53–90</span></div>
+</div>
+<div class="lvl"><h2 id="lt"></h2><p id="ld"></p></div>
+<div class="grow">
+<h3>還有成長空間的題目</h3>
+<p class="hint">以下是沒拿到滿分 5 分的題目，從分數最低的排起。</p>
+<ul id="growlist"></ul>
+</div>
+<div class="ract">
+<button class="ghost" id="copy" type="button">複製結果文字</button>
+<span id="copied"></span>
+</div>
+</section>
+
+<p class="src">Source From：Mind Tools</p>
+</main>
+
+<script>
+{
+const Q=[
+"分配任務時，我會考慮夥伴的技能和興趣",
+"我懷疑自己和我的成功能力",
+"我期望團隊能取得一流的成績",
+"我希望我的團隊比我更加努力",
+"當某人不高興時，我會嘗試瞭解對方的感覺",
+"當情勢改變時，我很難知道該怎麼辦",
+"我認為不應該因為個人的感覺，妨礙績效和生產力",
+"我很有動力，因為我覺得會成功",
+"花在擔心團隊士氣上的時間，是一種浪費",
+"我在工作場上經常感到沮喪和擔心",
+"我總是讓夥伴感受到，我需要他們的能力",
+"與團隊合作時，我鼓勵所有人朝著相同的目標努力",
+"打破自己的規則和期望，比總要做一個執行者容易多了",
+"我喜歡為未來做計畫",
+"有人批評我時，我感到受到威脅",
+"當夥伴有需要時，我願意花時間去瞭解他的問題，以協助他任務成功",
+"我對生活很樂觀，我能看到的暫時的挫折和問題",
+"團隊想要有好表現，必須讓成員持續做相同的任務，才能讓任務愈趨完美，而不是總讓成員做不熟悉的事，挑戰新技能"
+];
+const REV=new Set([2,4,6,7,9,10,13,15,18]);
+const LV=[
+{min:18,max:34,t:"看來，你需要加強自己的管理技術了。",d:"如果你願意在工作、日常、或者團體中，將會有更多的人際資產圍繞在你身邊。"},
+{min:35,max:52,t:"作為領導者，你做得還不錯。但應有潛力做得更好。",d:"現在是您提高技能，並成為最好的機會。"},
+{min:53,max:90,t:"你真優秀！看來你正努力成為一名優秀的領導者。",d:"當然，每個人都不可能完美，所以，請查看未獲得最高分的領域，並找出可以提高績效的方法。"}
+];
+const ML=["非常<br>不同意","不同意","普通","同意","非常<br>同意"];
+let state={a:Array(18).fill(0),name:""};
+const $=id=>document.getElementById(id);
+const pts=(i,v)=>REV.has(i+1)?6-v:v;
+
+function render(){
+  $("list").innerHTML=Q.map((q,i)=>`<li class="q" id="q${i+1}"><p><b>${i+1}.</b><span>${q}</span></p><div><div class="opts" role="group" aria-label="第 ${i+1} 題">${[1,2,3,4,5].map(v=>`<button type="button" class="opt" id="q${i+1}o${v}" data-i="${i}" data-v="${v}" aria-pressed="${state.a[i]===v}">${v}</button>`).join("")}</div><div class="mlabel" aria-hidden="true">${ML.map(m=>`<span>${m}</span>`).join("")}</div></div></li>`).join("");
+  progress();
+}
+function progress(){
+  const n=state.a.filter(Boolean).length;
+  $("count").textContent=`${n} / 18`;
+  $("fill").style.width=(n/18*100)+"%";
+}
+function total(){return state.a.reduce((s,v,i)=>s+pts(i,v),0)}
+function level(s){return LV.find(l=>s>=l.min&&s<=l.max)||LV[0]}
+function showResult(scroll){
+  const s=total(),l=level(s);
+  $("score").textContent=s;
+  const d=new Date();
+  $("rwho").textContent=(state.name?state.name+"・":"")+`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
+  $("lt").textContent=l.t;$("ld").textContent=l.d;
+  $("result").classList.add("on");
+  $("mark").style.left="0%";
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("mark").style.left=((s-18)/72*100)+"%"}));
+  const g=state.a.map((v,i)=>({i,p:pts(i,v)})).filter(x=>x.p<5).sort((a,b)=>a.p-b.p||a.i-b.i);
+  $("growlist").innerHTML=g.length?g.map(x=>`<li><span>${x.i+1}. ${Q[x.i]}</span><span class="pips" aria-label="${x.p} 分">${[1,2,3,4,5].map(k=>`<i class="${k<=x.p?"f":""}"></i>`).join("")}</span></li>`).join(""):`<li><span>每一題都拿到滿分，太厲害了！</span><span></span></li>`;
+  if(scroll)$("result").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});
+}
+
+$("list").addEventListener("click",e=>{
+  const b=e.target.closest(".opt");if(!b)return;
+  const i=+b.dataset.i,v=+b.dataset.v;
+  state.a[i]=v;
+  b.parentElement.querySelectorAll(".opt").forEach(o=>o.setAttribute("aria-pressed",String(+o.dataset.v===v)));
+  $("q"+(i+1)).classList.remove("miss");
+  progress();
+  if($("result").classList.contains("on")&&state.a.every(Boolean))showResult(false);
+});
+$("who").addEventListener("input",e=>{state.name=e.target.value.trim();if($("result").classList.contains("on"))showResult(false)});
+$("go").addEventListener("click",()=>{
+  const miss=state.a.map((v,i)=>v?0:i+1).filter(Boolean);
+  document.querySelectorAll(".q").forEach(q=>q.classList.remove("miss"));
+  if(miss.length){
+    miss.forEach(n=>$("q"+n).classList.add("miss"));
+    $("msg").textContent=`還有 ${miss.length} 題沒作答：第 ${miss.join("、")} 題`;
+    $("q"+miss[0]).scrollIntoView({behavior:"smooth",block:"center"});
+    return;
+  }
+  $("msg").textContent="改了答案，結果會自動更新。";
+  showResult(true);
+});
+let armed=false;
+$("reset").addEventListener("click",()=>{
+  if(!armed){armed=true;$("reset").textContent="確定清除？再按一次";setTimeout(()=>{armed=false;$("reset").textContent="全部重填"},3000);return}
+  armed=false;$("reset").textContent="全部重填";
+  state.a=Array(18).fill(0);
+  $("result").classList.remove("on");
+  $("msg").textContent="18 題都作答後就能看到結果。";
+  render();window.scrollTo({top:0});
+});
+$("copy").addEventListener("click",async()=>{
+  const s=total(),l=level(s);
+  const g=state.a.map((v,i)=>({i,p:pts(i,v)})).filter(x=>x.p<5).sort((a,b)=>a.p-b.p||a.i-b.i);
+  const txt=`領導素質自我評估｜${state.name||"未填名字"}\n總分：${s} / 90\n${l.t}${l.d}\n\n還有成長空間的題目：\n${g.map(x=>`${x.i+1}. ${Q[x.i]}（${x.p} 分）`).join("\n")||"無，全部滿分"}`;
+  try{await navigator.clipboard.writeText(txt);$("copied").textContent="已複製，可以貼到 LINE"}catch(err){$("copied").textContent="這個環境不能複製，請改用截圖"}
+});
+
+window.claude?.hot?.snapshot?.(()=>state);
+const start=d=>{
+  if(d&&Array.isArray(d.a)&&d.a.length===18)state={a:d.a,name:d.name||""};
+  $("who").value=state.name;
+  render();
+};
+window.claude?.hot?.ready?window.claude.hot.ready(start):start(window.claude?.hot?.data??{});
+}
+</script>
+</body>
+</html>
